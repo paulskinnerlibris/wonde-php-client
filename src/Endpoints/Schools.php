@@ -93,6 +93,11 @@ class Schools extends BootstrapEndpoint
     public $medicalEvents;
 
     /**
+     * @var MedicalNotes
+     */
+    public $medicalNotes;
+
+    /**
      * @var Periods
      */
     public $periods;
@@ -122,6 +127,12 @@ class Schools extends BootstrapEndpoint
      */
     public $studentsPreAdmission;
 
+
+    /**
+     * @var StudentLeavers
+     */
+    public $studentLeavers;
+
     /**
      * @var Assessment
      */
@@ -136,26 +147,21 @@ class Schools extends BootstrapEndpoint
      * @var Events
      */
     public $events;
-    
+
     /**
      * @var Doctors
      */
     public $doctors;
-    
+
     /**
      * @var Exclusions
      */
     public $exclusions;
 
     /**
-     * @var string
-     */
-    private $logPath = '';
-
-    /**
      * Schools constructor.
      *
-     * @param string $uri
+     *
      */
     public function __construct($token, $id = false, $logPath = '')
     {
@@ -188,11 +194,13 @@ class Schools extends BootstrapEndpoint
         $this->lessonAttendance       = new LessonAttendance($token, $this->uri, $this->logPath);
         $this->medicalConditions      = new MedicalConditions($token, $this->uri, $this->logPath);
         $this->medicalEvents          = new MedicalEvents($token, $this->uri, $this->logPath);
+        $this->medicalNotes           = new MedicalNotes($token, $this->uri, $this->logPath);
         $this->periods                = new Periods($token, $this->uri, $this->logPath);
         $this->photos                 = new Photos($token, $this->uri, $this->logPath);
         $this->rooms                  = new Rooms($token, $this->uri, $this->logPath);
         $this->students               = new Students($token, $this->uri, $this->logPath);
         $this->studentsPreAdmission   = new StudentsPreAdmission($token, $this->uri, $this->logPath);
+        $this->studentLeavers         = new StudentLeavers($token, $this->uri, $this->logPath);
         $this->subjects               = new Subjects($token, $this->uri, $this->logPath);
     }
 
@@ -220,12 +228,16 @@ class Schools extends BootstrapEndpoint
         $this->lessonAttendance->domain = $domain;
         $this->medicalConditions->domain = $domain;
         $this->medicalEvents->domain = $domain;
+        $this->medicalNotes->domain = $domain;
         $this->periods->domain = $domain;
         $this->photos->domain = $domain;
         $this->rooms->domain = $domain;
         $this->students->domain = $domain;
         $this->studentsPreAdmission->domain = $domain;
+        $this->studentLeavers->domain = $domain;
         $this->subjects->domain = $domain;
+
+        return $this;
     }
 
     /**
@@ -254,6 +266,32 @@ class Schools extends BootstrapEndpoint
         return $this->all($includes, $parameters);
     }
 
+    /**
+     * Return all declined schools
+     *
+     * @param array $includes
+     * @param array $parameters
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    public function declined($includes = [], $parameters = [])
+    {
+        $this->uri = $this->uri . 'declined/';
+        return $this->all($includes, $parameters);
+    }
+
+    /**
+     * Return all revoked schools
+     *
+     * @param array $includes
+     * @param array $parameters
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    public function revoked($includes = [], $parameters = [])
+    {
+        $this->uri = $this->uri . 'revoked/';
+        return $this->all($includes, $parameters);
+    }
+    
     /**
      * Search available schools
      *
